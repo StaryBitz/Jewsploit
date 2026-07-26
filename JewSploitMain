@@ -1,0 +1,1379 @@
+    end
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- // MATRIX RAIN BACKGROUND
+-- ═══════════════════════════════════════════════════════════
+local function CreateMatrixRain(parent)
+    local container = Instance.new("Frame")
+    container.Name = "MatrixRain"
+    container.Size = UDim2.new(1, 0, 1, 0)
+    container.BackgroundTransparency = 1
+    container.ZIndex = 0
+    container.Parent = parent
+
+    local chars = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ01234567890ABCDEF"
+    local columns = {}
+
+    for i = 1, 40 do
+        local column = Instance.new("TextLabel")
+        column.Size = UDim2.new(0, 14, 1, 0)
+        column.Position = UDim2.new(0, (i - 1) * 19, 0, 0)
+        column.BackgroundTransparency = 1
+        column.Font = Enum.Font.Code
+        column.TextSize = 12
+        column.TextColor3 = Color3.fromRGB(0, 180, 0)
+        column.TextXAlignment = Enum.TextXAlignment.Left
+        column.Text = ""
+        column.ZIndex = 1
+        column.Parent = container
+
+        columns[i] = {
+            label = column,
+            y = math.random(-50, 0),
+            speed = math.random(2, 8) / 10
+        }
+    end
+
+    spawn(function()
+        while container.Parent do
+            for _, col in ipairs(columns) do
+                if math.random(1, 5) == 1 then
+                    col.label.Text = chars:sub(math.random(1, #chars), math.random(1, #chars))
+                    col.label.Position = UDim2.new(col.label.Position.X.Scale, col.label.Position.X.Offset, 0, col.y)
+                    col.y = col.y + col.speed * 3
+                    if col.y > 520 then
+                        col.y = math.random(-80, -20)
+                    end
+                    col.label.TextTransparency = math.random(20, 60) / 100
+                end
+            end
+            wait(0.08)
+        end
+    end)
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- // MAIN GUI FRAME
+-- ═══════════════════════════════════════════════════════════
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MatrixTerminalHub"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = game:GetService("CoreGui")
+
+-- Glow effect container
+local GlowFrame = Instance.new("Frame")
+GlowFrame.Name = "GlowEffect"
+GlowFrame.Size = UDim2.new(0, 680, 0, 480)
+GlowFrame.Position = UDim2.new(0.5, -340, 0.5, -240)
+GlowFrame.BackgroundColor3 = Color3.fromRGB(0, 40, 0)
+GlowFrame.BackgroundTransparency = 0.6
+GlowFrame.BorderSizePixel = 0
+GlowFrame.ZIndex = 1
+GlowFrame.Parent = ScreenGui
+
+local GlowCorner = Instance.new("UICorner")
+GlowCorner.CornerRadius = UDim.new(0, 12)
+GlowCorner.Parent = GlowFrame
+
+local GlowBlur = Instance.new("BlurEffect")
+GlowBlur.Size = 20
+GlowBlur.Parent = GlowFrame
+
+-- Main Frame
+local Main = Instance.new("Frame")
+Main.Name = "MainFrame"
+Main.Size = UDim2.new(0, 660, 0, 460)
+Main.Position = UDim2.new(0.5, -330, 0.5, -230)
+Main.BackgroundColor3 = Color3.fromRGB(8, 8, 8)
+Main.BorderSizePixel = 0
+Main.ZIndex = 5
+Main.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 8)
+MainCorner.Parent = Main
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(0, 255, 70)
+MainStroke.Thickness = 1.5
+MainStroke.Transparency = 0.3
+MainStroke.Parent = Main
+
+CreateMatrixRain(Main)
+
+-- Make draggable
+makeDraggable(Main, Main)
+
+-- ═══════════════════════════════════════════════════════════
+-- // TITLE BAR
+-- ═══════════════════════════════════════════════════════════
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0, 36)
+TitleBar.BackgroundColor3 = Color3.fromRGB(0, 15, 0)
+TitleBar.BorderSizePixel = 0
+TitleBar.ZIndex = 10
+TitleBar.Parent = Main
+
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, 8)
+TitleCorner.Parent = TitleBar
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, -40, 1, 0)
+TitleLabel.Position = UDim2.new(0, 12, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Font = Enum.Font.Code
+TitleLabel.TextSize = 14
+TitleLabel.TextColor3 = Color3.fromRGB(0, 255, 70)
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.ZIndex = 11
+TitleLabel.Text = "MATRIX_TERMINAL v1.0 // root@"
+TitleLabel.Parent = TitleBar
+
+-- Close button
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 28, 0, 28)
+CloseBtn.Position = UDim2.new(1, -32, 0, 4)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+CloseBtn.Font = Enum.Font.Code
+CloseBtn.TextSize = 16
+CloseBtn.TextColor3 = Color3.fromRGB(255, 50, 50)
+CloseBtn.Text = "X"
+CloseBtn.ZIndex = 12
+CloseBtn.Parent = TitleBar
+
+local CloseBtnCorner = Instance.new("UICorner")
+CloseBtnCorner.CornerRadius = UDim.new(0, 4)
+CloseBtnCorner.Parent = CloseBtn
+
+CloseBtn.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- ═══════════════════════════════════════════════════════════
+-- // SIDEBAR NAVIGATION
+-- ═══════════════════════════════════════════════════════════
+local Sidebar = Instance.new("Frame")
+Sidebar.Name = "Sidebar"
+Sidebar.Size = UDim2.new(0, 130, 1, -36)
+Sidebar.Position = UDim2.new(0, 0, 0, 36)
+Sidebar.BackgroundColor3 = Color3.fromRGB(5, 12, 5)
+Sidebar.BorderSizePixel = 0
+Sidebar.ZIndex = 10
+Sidebar.Parent = Main
+
+local SidebarStroke = Instance.new("UIStroke")
+SidebarStroke.Color = Color3.fromRGB(0, 80, 0)
+SidebarStroke.Thickness = 1
+SidebarStroke.Parent = Sidebar
+
+local function CreateTabButton(name, text, yPos)
+    local btn = Instance.new("TextButton")
+    btn.Name = name
+    btn.Size = UDim2.new(1, -10, 0, 28)
+    btn.Position = UDim2.new(0, 5, 0, yPos)
+    btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
+    btn.Font = Enum.Font.Code
+    btn.TextSize = 11
+    btn.TextColor3 = Color3.fromRGB(0, 200, 0)
+    btn.Text = "> " .. text
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.ZIndex = 11
+    btn.Parent = Sidebar
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 3)
+    btnCorner.Parent = btn
+
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(0, 50, 0)
+        btn.TextColor3 = Color3.fromRGB(0, 255, 70)
+    end)
+
+    btn.MouseLeave:Connect(function()
+        if not btn.Active then
+            btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
+            btn.TextColor3 = Color3.fromRGB(0, 200, 0)
+        end
+    end)
+
+    return btn
+end
+
+local tabNames = {
+    "Main",
+    "Treadmill",
+    "Assets",
+    "Guards",
+    "Trading",
+    "Misc"
+}
+
+local tabButtons = {}
+for i, name in ipairs(tabNames) do
+    tabButtons[name] = CreateTabButton("Tab_" .. name, name, 8 + (i - 1) * 34)
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- // CONTENT AREA
+-- ═══════════════════════════════════════════════════════════
+local ContentArea = Instance.new("ScrollingFrame")
+ContentArea.Name = "ContentArea"
+ContentArea.Size = UDim2.new(1, -140, 1, -46)
+ContentArea.Position = UDim2.new(0, 135, 0, 36)
+ContentArea.BackgroundTransparency = 1
+ContentArea.ScrollBarThickness = 3
+ContentArea.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 70)
+ContentArea.BorderSizePixel = 0
+ContentArea.ZIndex = 10
+ContentArea.CanvasSize = UDim2.new(0, 0, 0, 0)
+ContentArea.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ContentArea.Parent = Main
+
+-- ═══════════════════════════════════════════════════════════
+-- // TERMINAL LOG (bottom)
+-- ═══════════════════════════════════════════════════════════
+local TerminalLog = Instance.new("Frame")
+TerminalLog.Name = "TerminalLog"
+TerminalLog.Size = UDim2.new(1, -140, 0, 80)
+TerminalLog.Position = UDim2.new(0, 135, 1, -85)
+TerminalLog.BackgroundColor3 = Color3.fromRGB(0, 8, 0)
+TerminalLog.BorderSizePixel = 0
+TerminalLog.ZIndex = 15
+TerminalLog.Parent = Main
+
+local LogCorner = Instance.new("UICorner")
+LogCorner.CornerRadius = UDim.new(0, 4)
+LogCorner.Parent = TerminalLog
+
+local LogStroke = Instance.new("UIStroke")
+LogStroke.Color = Color3.fromRGB(0, 100, 0)
+LogStroke.Thickness = 1
+LogStroke.Parent = TerminalLog
+
+local LogLabel = Instance.new("TextLabel")
+LogLabel.Name = "LogText"
+LogLabel.Size = UDim2.new(1, -10, 1, -10)
+LogLabel.Position = UDim2.new(0, 5, 0, 5)
+LogLabel.BackgroundTransparency = 1
+LogLabel.Font = Enum.Font.Code
+LogLabel.TextSize = 10
+LogLabel.TextColor3 = Color3.fromRGB(0, 220, 0)
+LogLabel.TextXAlignment = Enum.TextXAlignment.Left
+LogLabel.TextYAlignment = Enum.TextYAlignment.Top
+LogLabel.TextWrapped = true
+LogLabel.ZIndex = 16
+LogLabel.Text = "[SYS] Matrix Terminal Hub loaded.\n[SYS] All modules ready.\n"
+LogLabel.Parent = TerminalLog
+
+local function Log(msg, color)
+    color = color or Color3.fromRGB(0, 220, 0)
+    LogLabel.Text = LogLabel.Text .. "[" .. os.date("%H:%M:%S") .. "] " .. msg .. "\n"
+    local lines = LogLabel.Text:split("\n")
+    if #lines > 6 then
+        LogLabel.Text = table.concat(lines, "\n", #lines - 5, #lines)
+    end
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- // UI COMPONENT HELPERS
+-- ═══════════════════════════════════════════════════════════
+local componentY = 0
+
+local function ClearContent()
+    for _, child in ipairs(ContentArea:GetChildren()) do
+        if child:IsA("Frame") or child:IsA("TextButton") or child:IsA("TextBox") then
+            child:Destroy()
+        end
+    end
+    componentY = 0
+    ContentArea.CanvasSize = UDim2.new(0, 0, 0, 0)
+end
+
+local function AddSectionLabel(text)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -10, 0, 22)
+    label.Position = UDim2.new(0, 5, 0, componentY)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.Code
+    label.TextSize = 12
+    label.TextColor3 = Color3.fromRGB(0, 255, 100)
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Text = "── " .. text .. " " .. string.rep("─", 40 - #text)
+    label.ZIndex = 10
+    label.Parent = ContentArea
+    componentY = componentY + 26
+end
+
+local function AddToggle(name, text, callback)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -10, 0, 32)
+    frame.Position = UDim2.new(0, 5, 0, componentY)
+    frame.BackgroundColor3 = Color3.fromRGB(0, 15, 0)
+    frame.BorderSizePixel = 0
+    frame.ZIndex = 10
+    frame.Parent = ContentArea
+
+    local fCorner = Instance.new("UICorner")
+    fCorner.CornerRadius = UDim.new(0, 4)
+    fCorner.Parent = frame
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -60, 1, 0)
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.Code
+    label.TextSize = 11
+    label.TextColor3 = Color3.fromRGB(0, 200, 0)
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Text = text
+    label.ZIndex = 11
+    label.Parent = frame
+
+    local toggle = Instance.new("TextButton")
+    toggle.Name = name
+    toggle.Size = UDim2.new(0, 44, 0, 20)
+    toggle.Position = UDim2.new(1, -52, 0.5, -10)
+    toggle.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+    toggle.Font = Enum.Font.Code
+    toggle.TextSize = 10
+    toggle.TextColor3 = Color3.fromRGB(200, 50, 50)
+    toggle.Text = "[OFF]"
+    toggle.ZIndex = 12
+    toggle.Parent = frame
+
+    local tCorner = Instance.new("UICorner")
+    tCorner.CornerRadius = UDim.new(0, 3)
+    tCorner.Parent = toggle
+
+    local enabled = false
+    toggle.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        if enabled then
+            toggle.BackgroundColor3 = Color3.fromRGB(0, 40, 0)
+            toggle.TextColor3 = Color3.fromRGB(0, 255, 70)
+            toggle.Text = "[ON]"
+            Log("[ON] " .. text)
+        else
+            toggle.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+            toggle.TextColor3 = Color3.fromRGB(200, 50, 50)
+            toggle.Text = "[OFF]"
+            Log("[OFF] " .. text)
+        end
+        callback(enabled)
+    end)
+
+    componentY = componentY + 36
+    return toggle
+end
+
+local function AddButton(name, text, callback)
+    local btn = Instance.new("TextButton")
+    btn.Name = name
+    btn.Size = UDim2.new(1, -10, 0, 30)
+    btn.Position = UDim2.new(0, 5, 0, componentY)
+    btn.BackgroundColor3 = Color3.fromRGB(0, 25, 0)
+    btn.Font = Enum.Font.Code
+    btn.TextSize = 11
+    btn.TextColor3 = Color3.fromRGB(0, 220, 0)
+    btn.Text = "[EXEC] " .. text
+    btn.ZIndex = 10
+    btn.Parent = ContentArea
+
+    local bCorner = Instance.new("UICorner")
+    bCorner.CornerRadius = UDim.new(0, 4)
+    bCorner.Parent = btn
+
+    local bStroke = Instance.new("UIStroke")
+    bStroke.Color = Color3.fromRGB(0, 120, 0)
+    bStroke.Thickness = 1
+    bStroke.Parent = btn
+
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(0, 50, 0)
+    end)
+    btn.MouseLeave:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(0, 25, 0)
+    end)
+
+    btn.MouseButton1Click:Connect(function()
+        Log("[CMD] " .. text)
+        callback()
+    end)
+
+    componentY = componentY + 34
+    return btn
+end
+
+local function AddInput(name, placeholder, callback)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -10, 0, 32)
+    frame.Position = UDim2.new(0, 5, 0, componentY)
+    frame.BackgroundTransparency = 1
+    frame.ZIndex = 10
+    frame.Parent = ContentArea
+
+    local input = Instance.new("TextBox")
+    input.Name = name
+    input.Size = UDim2.new(1, -80, 0, 24)
+    input.Position = UDim2.new(0, 0, 0, 4)
+    input.BackgroundColor3 = Color3.fromRGB(0, 12, 0)
+    input.Font = Enum.Font.Code
+    input.TextSize = 11
+    input.TextColor3 = Color3.fromRGB(0, 220, 0)
+    input.PlaceholderText = placeholder
+    input.PlaceholderColor3 = Color3.fromRGB(0, 80, 0)
+    input.Text = ""
+    input.ZIndex = 11
+    input.ClearTextOnFocus = false
+    input.Parent = frame
+
+    local iStroke = Instance.new("UIStroke")
+    iStroke.Color = Color3.fromRGB(0, 80, 0)
+    iStroke.Thickness = 1
+    iStroke.Parent = input
+
+    local iCorner = Instance.new("UICorner")
+    iCorner.CornerRadius = UDim.new(0, 3)
+    iCorner.Parent = input
+
+    local execBtn = Instance.new("TextButton")
+    execBtn.Size = UDim2.new(0, 65, 0, 24)
+    execBtn.Position = UDim2.new(1, -70, 0, 4)
+    execBtn.BackgroundColor3 = Color3.fromRGB(0, 40, 0)
+    execBtn.Font = Enum.Font.Code
+    execBtn.TextSize = 10
+    execBtn.TextColor3 = Color3.fromRGB(0, 255, 70)
+    execBtn.Text = "RUN >"
+    execBtn.ZIndex = 12
+    execBtn.Parent = frame
+
+    local eCorner = Instance.new("UICorner")
+    eCorner.CornerRadius = UDim.new(0, 3)
+    eCorner.Parent = execBtn
+
+    execBtn.MouseButton1Click:Connect(function()
+        if input.Text ~= "" then
+            Log("[CMD] " .. name .. ": " .. input.Text)
+            callback(input.Text)
+        end
+    end)
+
+    componentY = componentY + 36
+    return input
+end
+
+local function AddSlider(name, text, min, max, default, callback)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -10, 0, 44)
+    frame.Position = UDim2.new(0, 5, 0, componentY)
+    frame.BackgroundTransparency = 1
+    frame.ZIndex = 10
+    frame.Parent = ContentArea
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.6, 0, 0, 18)
+    label.Position = UDim2.new(0, 5, 0, 2)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.Code
+    label.TextSize = 11
+    label.TextColor3 = Color3.fromRGB(0, 200, 0)
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Text = text
+    label.ZIndex = 11
+    label.Parent = frame
+
+    local valLabel = Instance.new("TextLabel")
+    valLabel.Size = UDim2.new(0.35, 0, 0, 18)
+    valLabel.Position = UDim2.new(0.65, 0, 0, 2)
+    valLabel.BackgroundTransparency = 1
+    valLabel.Font = Enum.Font.Code
+    valLabel.TextSize = 11
+    valLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
+    valLabel.TextXAlignment = Enum.TextXAlignment.Right
+    valLabel.Text = tostring(default)
+    valLabel.ZIndex = 11
+    valLabel.Parent = frame
+
+    local sliderBg = Instance.new("Frame")
+    sliderBg.Size = UDim2.new(1, -10, 0, 8)
+    sliderBg.Position = UDim2.new(0, 5, 0, 28)
+    sliderBg.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
+    sliderBg.BorderSizePixel = 0
+    sliderBg.ZIndex = 11
+    sliderBg.Parent = frame
+
+    local bgCorner = Instance.new("UICorner")
+    bgCorner.CornerRadius = UDim.new(0, 4)
+    bgCorner.Parent = sliderBg
+
+    local sliderFill = Instance.new("Frame")
+    sliderFill.Name = "Fill"
+    sliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+    sliderFill.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+    sliderFill.BorderSizePixel = 0
+    sliderFill.ZIndex = 12
+    sliderFill.Parent = sliderBg
+
+    local fillCorner = Instance.new("UICorner")
+    fillCorner.CornerRadius = UDim.new(0, 4)
+    fillCorner.Parent = sliderFill
+
+    local dragging = false
+    sliderBg.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+        end
+    end)
+
+    sliderBg.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local relX = math.clamp((input.Position.X - sliderBg.AbsolutePosition.X) / sliderBg.AbsoluteSize.X, 0, 1)
+            local val = math.floor(min + (max - min) * relX)
+            sliderFill.Size = UDim2.new(relX, 0, 1, 0)
+            valLabel.Text = tostring(val)
+            callback(val)
+        end
+    end)
+
+    componentY = componentY + 48
+    return sliderBg
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- // TAB CONTENT BUILDERS
+-- ═══════════════════════════════════════════════════════════
+
+-- // MAIN TAB
+local function BuildMainTab()
+    ClearContent()
+    AddSectionLabel("MAIN CONTROLS")
+
+    AddToggle("AutoCollect", "Auto Collect Money", function(on)
+        _G.AutoCollect = on
+        if on then
+            spawn(function()
+                while _G.AutoCollect do
+                    pcall(function()
+                        -- Listen for money events and auto-collect
+                        -- The MoneyCollected event fires server->client
+                        -- We can try to trigger collection by firing client-side events
+                    end)
+                    wait(1)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoSell", "Auto Sell All Assets", function(on)
+        _G.AutoSell = on
+        if on then
+            spawn(function()
+                while _G.AutoSell do
+                    pcall(function()
+                        R("AssetInventory:SellAllAssets"):FireServer()
+                    end)
+                    wait(30)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoEquipBest", "Auto Equip Best Backpack", function(on)
+        _G.AutoEquipBest = on
+        if on then
+            spawn(function()
+                while _G.AutoEquipBest do
+                    pcall(function()
+                        RF("Backpack:EquipBest"):InvokeServer()
+                    end)
+                    wait(10)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoRebirth", "Auto Rebirth", function(on)
+        _G.AutoRebirth = on
+        if on then
+            spawn(function()
+                while _G.AutoRebirth do
+                    pcall(function()
+                        RF("Rebirth:RequestRebirth"):InvokeServer()
+                        wait(2)
+                        RF("Rebirth:RequestRebirthCommit"):InvokeServer()
+                    end)
+                    wait(5)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("ClaimGifts", "Auto Claim Free Gifts", function(on)
+        _G.ClaimGifts = on
+        if on then
+            spawn(function()
+                while _G.ClaimGifts do
+                    pcall(function()
+                        RF("FreeGifts:RequestClaim"):InvokeServer()
+                    end)
+                    wait(10)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoClaimIndex", "Auto Claim All Index Rewards", function(on)
+        _G.AutoClaimIndex = on
+        if on then
+            spawn(function()
+                while _G.AutoClaimIndex do
+                    pcall(function()
+                        RF("Index:RequestClaimAll"):InvokeServer()
+                    end)
+                    wait(15)
+                end
+            end)
+        end
+    end)
+
+    AddSectionLabel("STATS")
+    AddButton("GetStats", "Fetch Player Stats", function()
+        pcall(function()
+            local stats = RF("Get Stats"):InvokeServer()
+            Log("[INFO] Stats: " .. tostring(stats))
+        end)
+    end)
+
+    AddButton("GetExperiments", "Get Experiment Data", function()
+        pcall(function()
+            local exp = RF("Experiments:Get"):InvokeServer()
+            Log("[INFO] Experiments: " .. tostring(exp))
+        end)
+    end)
+end
+
+-- // TREADMILL TAB
+local function BuildTreadmillTab()
+    ClearContent()
+    AddSectionLabel("TREADMILL CONTROLS")
+
+    AddToggle("AutoFarm", "Auto Treadmill Farm", function(on)
+        _G.AutoFarm = on
+        if on then
+            Log("[FARM] Starting auto-farm loop...")
+            spawn(function()
+                while _G.AutoFarm do
+                    pcall(function()
+                        local char = LP.Character
+                        if char then
+                            local hrp = char:FindFirstChild("HumanoidRootPart")
+                            if hrp then
+                                -- Walk forward continuously to simulate running
+                                -- This triggers the treadmill ClientSnap
+                            end
+                        end
+                    end)
+                    wait(0.1)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("SlowToggle", "Treadmill Slow Mode Hack", function(on)
+        _G.SlowToggle = on
+        if on then
+            spawn(function()
+                while _G.SlowToggle do
+                    pcall(function()
+                        RF("Treadmills:RequestSetSlowToggleEnabled"):InvokeServer(false)
+                    end)
+                    wait(5)
+                end
+            end)
+        end
+    end)
+
+    AddSectionLabel("TREADMILL MEDIA")
+    AddInput("MediaIndex", "Set Media Index (number)", function(val)
+        pcall(function()
+            local num = tonumber(val)
+            if num then
+                RE("Treadmills:UpdateMediaIndex"):FireServer(num)
+                Log("[TREADMILL] Media index set to " .. num)
+            end
+        end)
+    end)
+
+    AddSectionLabel("TREADMILL PURCHASES")
+    AddInput("TreadmillPurchase", "Purchase Treadmill (id)", function(val)
+        pcall(function()
+            local id = tonumber(val)
+            if id then
+                local result = RF("Treadmills:RequestPurchase"):InvokeServer(id)
+                Log("[TREADMILL] Purchase result: " .. tostring(result))
+            end
+        end)
+    end)
+
+    AddButton("EquipTreadmill", "Equip Selected Treadmill", function()
+        pcall(function()
+            RF("Treadmills:RequestEquip"):InvokeServer()
+            Log("[TREADMILL] Equip request sent")
+        end)
+    end)
+
+    AddButton("UnequipTreadmill", "Unequip Treadmill", function()
+        pcall(function()
+            RF("Treadmills:RequestUnequip"):InvokeServer()
+            Log("[TREADMILL] Unequip request sent")
+        end)
+    end)
+
+    AddButton("SelectTreadmill", "Select Treadmill", function()
+        pcall(function()
+            RF("Treadmills:RequestSelect"):InvokeServer()
+            Log("[TREADMILL] Select request sent")
+        end)
+    end)
+end
+
+-- // ASSETS TAB
+local function BuildAssetsTab()
+    ClearContent()
+    AddSectionLabel("ASSET MANAGEMENT")
+
+    AddToggle("AutoUpgrade", "Auto Upgrade Assets", function(on)
+        _G.AutoUpgrade = on
+        if on then
+            spawn(function()
+                while _G.AutoUpgrade do
+                    pcall(function()
+                        RF("ActiveAssets:RequestUpgrade"):InvokeServer()
+                    end)
+                    wait(3)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoClaimGen", "Auto Claim Generated Assets", function(on)
+        _G.AutoClaimGen = on
+        if on then
+            spawn(function()
+                while _G.AutoClaimGen do
+                    pcall(function()
+                        RF("ActiveAssets:ClaimGenerated"):InvokeServer()
+                    end)
+                    wait(5)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoPlace", "Auto Place Assets", function(on)
+        _G.AutoPlace = on
+        if on then
+            spawn(function()
+                while _G.AutoPlace do
+                    pcall(function()
+                        RF("ActiveAssets:Place"):InvokeServer()
+                    end)
+                    wait(2)
+                end
+            end)
+        end
+    end)
+
+    AddButton("SellAll", "Sell All Assets Now", function()
+        pcall(function()
+            RE("AssetInventory:SellAllAssets"):FireServer()
+            Log("[ASSETS] Sell all fired")
+        end)
+    end)
+
+    AddButton("PickUpAll", "Pick Up Nearest Asset", function()
+        pcall(function()
+            RF("ActiveAssets:RequestPickUp"):InvokeServer()
+            Log("[ASSETS] Pick up request sent")
+        end)
+    end)
+
+    AddButton("SellSingle", "Sell Single Asset", function()
+        pcall(function()
+            RE("AssetInventory:SellAsset"):FireServer()
+            Log("[ASSETS] Sell single fired")
+        end)
+    end)
+
+    AddSectionLabel("OFFLINE ASSETS")
+    AddButton("RedeemOffline", "Redeem Offline Assets", function()
+        pcall(function()
+            RF("OfflineAssets:Redeem"):InvokeServer()
+            Log("[ASSETS] Offline redeem sent")
+        end)
+    end)
+
+    AddButton("GetOfflineSummary", "Get Offline Summary", function()
+        pcall(function()
+            local summary = RF("OfflineAssets:GetSummary"):InvokeServer()
+            Log("[ASSETS] Offline summary: " .. tostring(summary))
+        end)
+    end)
+
+    AddButton("CheckOfflinePending", "Check If Offline Pending", function()
+        pcall(function()
+            local pending = RF("OfflineAssets:IsStatePending"):InvokeServer()
+            Log("[ASSETS] Offline pending: " .. tostring(pending))
+        end)
+    end)
+
+    AddSectionLabel("TRAILS")
+    AddButton("PurchaseTrail", "Purchase Trail (id needed)", function()
+        pcall(function()
+            RF("Trails:RequestPurchase"):InvokeServer(1)
+            Log("[ASSETS] Trail purchase attempted")
+        end)
+    end)
+
+    AddButton("EquipTrail", "Equip Selected Trail", function()
+        pcall(function()
+            RF("Trails:RequestEquip"):InvokeServer()
+            Log("[ASSETS] Trail equip sent")
+        end)
+    end)
+
+    AddButton("UnequipTrail", "Unequip Trail", function()
+        pcall(function()
+            RF("Trails:RequestUnequip"):InvokeServer()
+            Log("[ASSETS] Trail unequip sent")
+        end)
+    end)
+
+    AddSectionLabel("BACKPACK")
+    AddToggle("AutoSellToggle", "Set Auto-Sell ON", function(on)
+        _G.BPAutoSell = on
+        pcall(function()
+            RF("Backpack:SetAutoSellState"):InvokeServer(on)
+            Log("[ASSETS] Auto-sell set to: " .. tostring(on))
+        end)
+    end)
+
+    AddButton("GetAutoSellState", "Check Auto-Sell State", function()
+        pcall(function()
+            local state = RF("Backpack:GetAutoSellState"):InvokeServer()
+            Log("[ASSETS] Auto-sell state: " .. tostring(state))
+        end)
+    end)
+
+    AddButton("GetEquipBest", "Check Equip Best Status", function()
+        pcall(function()
+            local status = RF("Backpack:GetEquipBestStatus"):InvokeServer()
+            Log("[ASSETS] Equip best: " .. tostring(status))
+        end)
+    end)
+end
+
+-- // GUARDS TAB
+local function BuildGuardsTab()
+    ClearContent()
+    AddSectionLabel("GUARD AUTOMATION")
+
+    AddToggle("AutoGuardRun", "Auto Start Lucky Block Runs", function(on)
+        _G.AutoGuardRun = on
+        if on then
+            spawn(function()
+                while _G.AutoGuardRun do
+                    pcall(function()
+                        RF("Guards:RequestBeginLuckyBlockRun"):InvokeServer()
+                        wait(2)
+                        RF("Guards:RequestLaunchLuckyBlockRun"):InvokeServer()
+                    end)
+                    wait(10)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoCaughtReveal", "Auto Reveal Caught Rewards", function(on)
+        _G.AutoCaughtReveal = on
+        if on then
+            spawn(function()
+                while _G.AutoCaughtReveal do
+                    pcall(function()
+                        RF("Guards:RequestBeginCaughtReveal"):InvokeServer()
+                        wait(1)
+                        RF("Guards:RequestFinalizeCaughtReward"):InvokeServer()
+                    end)
+                    wait(5)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoLostRecovery", "Auto Recover Lost Rewards", function(on)
+        _G.AutoLostRecovery = on
+        if on then
+            spawn(function()
+                while _G.AutoLostRecovery do
+                    pcall(function()
+                        local prep = RF("Guards:RequestPrepareLostRewardRecovery"):InvokeServer()
+                        if prep then
+                            wait(2)
+                            RE("Guards:RequestCancelLostRewardRecovery"):FireServer()
+                        end
+                    end)
+                    wait(15)
+                end
+            end)
+        end
+    end)
+
+    AddToggle("AutoSellGuard", "Auto Sell Guard Inventory", function(on)
+        _G.AutoSellGuard = on
+        if on then
+            spawn(function()
+                while _G.AutoSellGuard do
+                    pcall(function()
+                        RE("Guards:RequestFullInventorySellPrompt"):FireServer()
+                    end)
+                    wait(30)
+                end
+            end)
+        end
+    end)
+
+    AddButton("GetGuardAreas", "Download Guard Areas", function()
+        pcall(function()
+            local areas = RF("Guards:RequestGuardAreas"):InvokeServer()
+            Log("[GUARDS] Guard areas: " .. tostring(areas))
+        end)
+    end)
+
+    AddButton("SpeedPowerGain", "Request Walk Speed Power", function()
+        pcall(function()
+            RE("Guards:RequestWalkSpeedPowerGain"):FireServer()
+            Log("[GUARDS] Speed power requested")
+        end)
+    end)
+
+    AddButton("CaughtReturn", "Request Caught Return", function()
+        pcall(function()
+            RE("Guards:RequestCaughtReturn"):FireServer()
+            Log("[GUARDS] Caught return requested")
+        end)
+    end)
+end
+
+-- // TRADING TAB
+local function BuildTradingTab()
+    ClearContent()
+    AddSectionLabel("TRADING")
+
+    AddToggle("AutoAcceptTrades", "Auto Accept Incoming Trades", function(on)
+        _G.AutoAcceptTrades = on
+        if on then
+            -- Hook into trading request events
+            pcall(function()
+                RE("Trading:Request"):OnClientEvent(function(...)
+                    if _G.AutoAcceptTrades then
+                        Log("[TRADE] Trade request received, auto-accepting...")
+                        RF("Server: Trading: Set Ready"):InvokeServer(true)
+                        RF("Server: Trading: Set Confirmed"):InvokeServer(true)
+                    end
+                end)
+            end)
+        end
+    end)
+
+    AddToggle("AutoRejectTrades", "Auto Reject All Trades", function(on)
+        _G.AutoRejectTrades = on
+        if on then
+            pcall(function()
+                RE("Trading:Request"):OnClientEvent(function(...)
+                    if _G.AutoRejectTrades then
+                        Log("[TRADE] Rejecting trade...")
+                        RF("Server: Trading: Reject"):InvokeServer()
+                    end
+                end)
+            end)
+        end
+    end)
+
+    AddButton("DeclineTrade", "Decline Current Trade", function()
+        pcall(function()
+            RF("Server: Trading: Decline"):InvokeServer()
+            Log("[TRADE] Trade declined")
+        end)
+    end)
+
+    AddButton("TradeRequest", "Send Trade Request", function()
+        pcall(function()
+            RE("Trading:Request"):FireServer()
+            Log("[TRADE] Trade request sent")
+        end)
+    end)
+
+    AddSectionLabel("STEAL")
+    AddToggle("AutoSteal", "Auto Steal Target Assets", function(on)
+        _G.AutoSteal = on
+        if on then
+            spawn(function()
+                while _G.AutoSteal do
+                    pcall(function()
+                        local target = RF("ActiveAssets:RequestStealTarget"):InvokeServer()
+                        if target then
+                            Log("[STEAL] Target found: " .. tostring(target))
+                        end
+                    end)
+                    wait(5)
+                end
+            end)
+        end
+    end)
+
+    AddSectionLabel("GIFTING")
+    AddButton("SendGift", "Send Gift Request", function()
+        pcall(function()
+            RE("Gifting:Request"):FireServer()
+            Log("[GIFT] Gift request sent")
+        end)
+    end)
+
+    AddButton("FriendGift", "Send Friend Gift Request", function()
+        pcall(function()
+            RE("Gifting:Friend Request"):FireServer()
+            Log("[GIFT] Friend gift request sent")
+        end)
+    end)
+end
+
+-- // MISC TAB
+local function BuildMiscTab()
+    ClearContent()
+    AddSectionLabel("LUCKY BLOCK")
+
+    AddToggle("AutoOpenStored", "Auto Open Stored Lucky Blocks", function(on)
+        _G.AutoOpenLucky = on
+        if on then
+            spawn(function()
+                while _G.AutoOpenLucky do
+                    pcall(function()
+                        RF("LuckyBlock:RequestStoredBlockOpenClaim"):InvokeServer()
+                    end)
+                    wait(5)
+                end
+            end)
+        end
+    end)
+
+    AddButton("DebugGrantBlocks", "Debug: Grant Stored Blocks", function()
+        pcall(function()
+            local result = RF("LuckyBlock:RequestDebugGrantStoredBlocks"):InvokeServer()
+            Log("[LUCKY] Debug grant: " .. tostring(result))
+        end)
+    end)
+
+    AddSectionLabel("CODES")
+    AddInput("RedeemCode", "Enter promo code", function(code)
+        pcall(function()
+            local result = RF("Codes:Claim"):InvokeServer(code)
+            Log("[CODE] Claim result: " .. tostring(result))
+        end)
+    end)
+
+    AddButton("GetActiveCodes", "Get Active Code States", function()
+        pcall(function()
+            local states = RF("Codes:Get Active Code State"):InvokeServer()
+            Log("[CODE] Active codes: " .. tostring(states))
+        end)
+    end)
+
+    AddSectionLabel("FUSE MACHINE")
+    AddButton("GetFusionSlots", "Get Fusion Slots", function()
+        pcall(function()
+            local slots = RF("FuseMachine:GetFusionSlots"):InvokeServer()
+            Log("[FUSE] Slots: " .. tostring(slots))
+        end)
+    end)
+
+    AddButton("ClearFuseSlots", "Clear All Fuse Slots", function()
+        pcall(function()
+            RF("FuseMachine:ClearSlots"):InvokeServer()
+            Log("[FUSE] Slots cleared")
+        end)
+    end)
+
+    AddButton("ClaimFuseReward", "Claim Fuse Reward", function()
+        pcall(function()
+            local result = RF("FuseMachine:ClaimReward"):InvokeServer()
+            Log("[FUSE] Claim result: " .. tostring(result))
+        end)
+    end)
+
+    AddButton("RequireFuseMobs", "Check Fuse Mob Requirements", function()
+        pcall(function()
+            local req = RF("FuseMachine:RequireFuseMobs"):InvokeServer()
+            Log("[FUSE] Requirements: " .. tostring(req))
+        end)
+    end)
+
+    AddSectionLabel("PLOT / BASE")
+    AddToggle("AutoUpgradeBase", "Auto Upgrade Base", function(on)
+        _G.AutoUpgradeBase = on
+        if on then
+            spawn(function()
+                while _G.AutoUpgradeBase do
+                    pcall(function()
+                        RE("Plots:RequestBaseUpgrade"):FireServer()
+                    end)
+                    wait(10)
+                end
+            end)
+        end
+    end)
+
+    AddButton("LobbyTeleport", "Teleport to Lobby", function()
+        pcall(function()
+            RE("Plots:RequestLobbyTeleport"):FireServer()
+            Log("[PLOT] Teleporting to lobby...")
+        end)
+    end)
+
+    AddButton("GetPlotState", "Get Plot State", function()
+        pcall(function()
+            local state = RF("Plots:RequestState"):InvokeServer()
+            Log("[PLOT] State: " .. tostring(state))
+        end)
+    end)
+
+    AddSectionLabel("GROUP / REWARDS")
+    AddButton("ClaimGroupReward", "Claim Group Reward", function()
+        pcall(function()
+            local result = RF("GroupReward:ClaimReward"):InvokeServer()
+            Log("[GROUP] Claim result: " .. tostring(result))
+        end)
+    end)
+
+    AddSectionLabel("ADMIN PANEL (SPOOF)")
+    AddButton("AdminCheck", "Check Admin Status", function()
+        pcall(function()
+            RE("AdminPanel_CheckAdminStatus"):FireServer()
+            Log("[ADMIN] Admin check fired (listen for response)")
+        end)
+    end)
+
+    AddButton("ResetSelfData", "Reset Self Data (Admin)", function()
+        pcall(function()
+            RE("AdminPanel_ResetSelfData"):FireServer()
+            Log("[ADMIN] Self data reset fired")
+        end)
+    end)
+
+    AddButton("GiveAssetToSelf", "Give Asset To Self (Admin)", function()
+        pcall(function()
+            RE("AdminPanel_GiveAssetToSelf"):FireServer()
+            Log("[ADMIN] Give asset fired (server validates)")
+        end)
+    end)
+
+    AddButton("SetWalkSpeed", "Set Walk Speed (Admin)", function()
+        pcall(function()
+            RE("AdminPanel_SetWalkSpeed"):FireServer(100)
+            Log("[ADMIN] Walk speed set to 100")
+        end)
+    end)
+
+    AddButton("SetSpeedPower", "Set Speed Power (Admin)", function()
+        pcall(function()
+            RE("AdminPanel_SetSpeedPower"):FireServer(999)
+            Log("[ADMIN] Speed power set to 999")
+        end)
+    end)
+
+    AddSectionLabel("CHARACTER")
+    AddButton("ResetCharacter", "Reset Character", function()
+        pcall(function()
+            RE("ClientCharacter:RequestCharacterReset"):FireServer()
+            Log("[CHAR] Character reset requested")
+        end)
+    end)
+
+    AddSectionLabel("SERVER LUCK")
+    AddButton("GetServerLuck", "Get Server Luck State", function()
+        pcall(function()
+            local luck = RF("ServerLuck:GetState"):InvokeServer()
+            Log("[LUCK] Server luck: " .. tostring(luck))
+        end)
+    end)
+
+    AddSectionLabel("ANALYTICS BYPASS")
+    AddToggle("AntiAfk", "Anti-AFK (Block AFK Reports)", function(on)
+        _G.AntiAfk = on
+        if on then
+            spawn(function()
+                while _G.AntiAfk do
+                    pcall(function()
+                        -- Report not-AFK state
+                        RE("Analytics:ReportAfkState"):FireServer(false)
+                    end)
+                    wait(60)
+                end
+            end)
+        end
+    end)
+
+    AddSectionLabel("FAVORITE")
+    AddInput("SetFavorite", "Toggle Favorite (asset id)", function(val)
+        pcall(function()
+            RE("AssetInventory:SetFavorite"):FireServer(tonumber(val) or 0)
+            Log("[INV] Favorite toggled for: " .. val)
+        end)
+    end)
+
+    AddSectionLabel("SETTINGS")
+    AddButton("RequestSettings", "Request Settings Update", function()
+        pcall(function()
+            RF("Settings:Request Update"):InvokeServer()
+            Log("[SETTINGS] Settings update requested")
+        end)
+    end)
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- // TAB SWITCHING
+-- ═══════════════════════════════════════════════════════════
+local tabBuilders = {
+    Main = BuildMainTab,
+    Treadmill = BuildTreadmillTab,
+    Assets = BuildAssetsTab,
+    Guards = BuildGuardsTab,
+    Trading = BuildTradingTab,
+    Misc = BuildMiscTab
+}
+
+local currentTab = "Main"
+
+local function SwitchTab(tabName)
+    if tabBuilders[tabName] then
+        currentTab = tabName
+        -- Reset all tab button colors
+        for name, btn in pairs(tabButtons) do
+            btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
+            btn.TextColor3 = Color3.fromRGB(0, 200, 0)
+            btn.Text = "> " .. name
+            btn.Active = false
+        end
+        -- Highlight active tab
+        tabButtons[tabName].BackgroundColor3 = Color3.fromRGB(0, 60, 0)
+        tabButtons[tabName].TextColor3 = Color3.fromRGB(0, 255, 100)
+        tabButtons[tabName].Text = ">> " .. tabName
+        tabButtons[tabName].Active = true
+        -- Build tab content
+        tabBuilders[tabName]()
+        Log("[TAB] Switched to " .. tabName)
+    end
+end
+
+for name, btn in pairs(tabButtons) do
+    btn.MouseButton1Click:Connect(function()
+        SwitchTab(name)
+    end)
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- // KEYBIND TOGGLE
+-- ═══════════════════════════════════════════════════════════
+game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.RightControl then
+        Main.Visible = not Main.Visible
+    elseif input.KeyCode == Enum.KeyCode.RightShift then
+        Main.Visible = not Main.Visible
+    end
+end)
+
+-- ═══════════════════════════════════════════════════════════
+-- // HOOK SERVER EVENTS FOR LOGGING
+-- ═══════════════════════════════════════════════════════════
+spawn(function()
+    pcall(function()
+        R("ActiveAssets:MoneyUpdated"):OnClientEvent(function(amount)
+            Log("[EVENT] Money updated: " .. tostring(amount))
+        end)
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        R("ActiveAssets:ItemUpdated"):OnClientEvent(function(item)
+            Log("[EVENT] Item updated: " .. tostring(item))
+        end)
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        R("New Stats"):OnClientEvent(function(stats)
+            Log("[EVENT] New stats received")
+        end)
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        R("Notifications_Show"):OnClientEvent(function(...)
+            Log("[NOTIF] Notification received")
+        end)
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        R("Plots:OnBaseUpgraded"):OnClientEvent(function(...)
+            Log("[EVENT] Base upgraded!")
+        end)
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        R("Guards:ActiveRunMutationHit"):OnClientEvent(function(...)
+            Log("[GUARD] Mutation hit during run!")
+        end)
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        R("Trading:Request"):OnClientEvent(function(player, ...)
+            Log("[TRADE] Request from: " .. tostring(player))
+        end)
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        R("Gifting:Request"):OnClientEvent(function(player, ...)
+            Log("[GIFT] Request from: " .. tostring(player))
+        end)
+    end)
+end)
+
+-- ═══════════════════════════════════════════════════════════
+-- // INITIALIZATION
+-- ═══════════════════════════════════════════════════════════
+SwitchTab("Main")
+Log("[SYS] Matrix Terminal Hub initialized successfully")
+Log("[SYS] Toggle UI: RightControl / RightShift")
+Log("[SYS] Connected " .. #tabNames .. " modules")
+print("[MATRIX TERMINAL] Loaded successfully. Toggle: RightControl or RightShift")</arg_value></tool_call>
