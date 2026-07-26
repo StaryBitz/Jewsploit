@@ -10,82 +10,82 @@ local Net = RS:WaitForChild("Network", 10)
 if not Net then warn("[MATRIX] Network folder not found!") return end
 
 local function RE(n)
-	local p = n:split(":")
-	if #p == 2 then
-		local f = Net:FindFirstChild(p[1])
-		return f and f:FindFirstChild(p[2]) or nil
-	end
-	return Net:FindFirstChild(n)
+    local p = n:split(":")
+    if #p == 2 then
+        local f = Net:FindFirstChild(p[1])
+        return f and f:FindFirstChild(p[2]) or nil
+    end
+    return Net:FindFirstChild(n)
 end
 local RF = RE
 local R = RE
 
 -- Draggable
 local function makeDraggable(frame, handle)
-	local dragging, dragInput, dragStart, startPos
-	handle.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = frame.Position
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then dragging = false end
-			end)
-		end
-	end)
-	handle.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			dragInput = input
-		end
-	end)
-	UIS.InputChanged:Connect(function(input)
-		if dragging and input == dragInput then
-			local d = input.Position - dragStart
-			frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
-		end
-	end)
+    local dragging, dragInput, dragStart, startPos
+    handle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    handle.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if dragging and input == dragInput then
+            local d = input.Position - dragStart
+            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+        end
+    end)
 end
 
 -- Matrix Rain
 local function CreateMatrixRain(parent)
-	local c = Instance.new("Frame")
-	c.Name = "MatrixRain"
-	c.Size = UDim2.new(1, 0, 1, 0)
-	c.BackgroundTransparency = 1
-	c.ZIndex = 0
-	c.ClipsDescendants = true
-	c.Parent = parent
-	local chars = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF"
-	local cols = {}
-	for i = 1, 38 do
-		local lb = Instance.new("TextLabel")
-		lb.Size = UDim2.new(0, 14, 1, 0)
-		lb.Position = UDim2.new(0, (i-1)*18, 0, 0)
-		lb.BackgroundTransparency = 1
-		lb.Font = Enum.Font.Code
-		lb.TextSize = 12
-		lb.TextColor3 = Color3.fromRGB(0, 180, 0)
-		lb.TextXAlignment = Enum.TextXAlignment.Left
-		lb.Text = ""
-		lb.ZIndex = 1
-		lb.Parent = c
-		cols[i] = {label = lb, y = math.random(-50, 0), speed = math.random(2, 8)/10}
-	end
-	spawn(function()
-		while c and c.Parent do
-			for _, col in ipairs(cols) do
-				if math.random(1, 5) == 1 then
-					local a, b = math.random(1, #chars), math.random(1, #chars)
-					col.label.Text = (a <= b) and chars:sub(a, b) or chars:sub(b, a)
-					col.label.Position = UDim2.new(col.label.Position.X.Scale, col.label.Position.X.Offset, 0, col.y)
-					col.y = col.y + col.speed * 3
-					if col.y > 500 then col.y = math.random(-80, -20) end
-					col.label.TextTransparency = math.random(20, 60) / 100
-				end
-			end
-			wait(0.08)
-		end
-	end)
+    local c = Instance.new("Frame")
+    c.Name = "MatrixRain"
+    c.Size = UDim2.new(1, 0, 1, 0)
+    c.BackgroundTransparency = 1
+    c.ZIndex = 0
+    c.ClipsDescendants = true
+    c.Parent = parent
+    local chars = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF"
+    local cols = {}
+    for i = 1, 38 do
+        local lb = Instance.new("TextLabel")
+        lb.Size = UDim2.new(0, 14, 1, 0)
+        lb.Position = UDim2.new(0, (i-1)*18, 0, 0)
+        lb.BackgroundTransparency = 1
+        lb.Font = Enum.Font.Code
+        lb.TextSize = 12
+        lb.TextColor3 = Color3.fromRGB(0, 180, 0)
+        lb.TextXAlignment = Enum.TextXAlignment.Left
+        lb.Text = ""
+        lb.ZIndex = 1
+        lb.Parent = c
+        cols[i] = {label = lb, y = math.random(-50, 0), speed = math.random(2, 8)/10}
+    end
+    spawn(function()
+        while c and c.Parent do
+            for _, col in ipairs(cols) do
+                if math.random(1, 5) == 1 then
+                    local a, b = math.random(1, #chars), math.random(1, #chars)
+                    col.label.Text = (a <= b) and chars:sub(a, b) or chars:sub(b, a)
+                    col.label.Position = UDim2.new(col.label.Position.X.Scale, col.label.Position.X.Offset, 0, col.y)
+                    col.y = col.y + col.speed * 3
+                    if col.y > 500 then col.y = math.random(-80, -20) end
+                    col.label.TextTransparency = math.random(20, 60) / 100
+                end
+            end
+            wait(0.08)
+        end
+    end)
 end
 
 -- ═══════════════════════════════════════════════════════════
@@ -166,7 +166,7 @@ MinBtn.ZIndex = 12
 MinBtn.Parent = TB
 Instance.new("UICorner", MinBtn).CornerRadius = UDim.new(0, 4)
 MinBtn.MouseButton1Click:Connect(function()
-	Main.Visible = not Main.Visible
+    Main.Visible = not Main.Visible
 end)
 
 -- Close
@@ -201,32 +201,32 @@ local tabNames = {"Main", "Treadmill", "Assets", "Guards", "Trading", "Misc"}
 local tabButtons = {}
 
 for i, name in ipairs(tabNames) do
-	local btn = Instance.new("TextButton")
-	btn.Name = "Tab_" .. name
-	btn.Size = UDim2.new(1, -10, 0, 28)
-	btn.Position = UDim2.new(0, 5, 0, 8 + (i-1) * 34)
-	btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
-	btn.Font = Enum.Font.Code
-	btn.TextSize = 11
-	btn.TextColor3 = Color3.fromRGB(0, 200, 0)
-	btn.Text = "> " .. name
-	btn.TextXAlignment = Enum.TextXAlignment.Left
-	btn.ZIndex = 11
-	btn.Parent = SB
-	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 3)
-	btn.MouseEnter:Connect(function()
-		if not btn.Active then
-			btn.BackgroundColor3 = Color3.fromRGB(0, 50, 0)
-			btn.TextColor3 = Color3.fromRGB(0, 255, 70)
-		end
-	end)
-	btn.MouseLeave:Connect(function()
-		if not btn.Active then
-			btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
-			btn.TextColor3 = Color3.fromRGB(0, 200, 0)
-		end
-	end)
-	tabButtons[name] = btn
+    local btn = Instance.new("TextButton")
+    btn.Name = "Tab_" .. name
+    btn.Size = UDim2.new(1, -10, 0, 28)
+    btn.Position = UDim2.new(0, 5, 0, 8 + (i-1) * 34)
+    btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
+    btn.Font = Enum.Font.Code
+    btn.TextSize = 11
+    btn.TextColor3 = Color3.fromRGB(0, 200, 0)
+    btn.Text = "> " .. name
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.ZIndex = 11
+    btn.Parent = SB
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 3)
+    btn.MouseEnter:Connect(function()
+        if not btn.Active then
+            btn.BackgroundColor3 = Color3.fromRGB(0, 50, 0)
+            btn.TextColor3 = Color3.fromRGB(0, 255, 70)
+        end
+    end)
+    btn.MouseLeave:Connect(function()
+        if not btn.Active then
+            btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
+            btn.TextColor3 = Color3.fromRGB(0, 200, 0)
+        end
+    end)
+    tabButtons[name] = btn
 end
 
 -- ═══════════════════════════════════════════════════════════
@@ -273,11 +273,11 @@ LogLabel.Text = "[SYS] Matrix Terminal Hub loaded.\n[SYS] All modules ready.\n"
 LogLabel.Parent = TLog
 
 local function Log(msg)
-	LogLabel.Text = LogLabel.Text .. "[" .. os.date("%H:%M:%S") .. "] " .. msg .. "\n"
-	local lines = LogLabel.Text:split("\n")
-	if #lines > 6 then
-		LogLabel.Text = table.concat(lines, "\n", #lines - 5, #lines)
-	end
+    LogLabel.Text = LogLabel.Text .. "[" .. os.date("%H:%M:%S") .. "] " .. msg .. "\n"
+    local lines = LogLabel.Text:split("\n")
+    if #lines > 6 then
+        LogLabel.Text = table.concat(lines, "\n", #lines - 5, #lines)
+    end
 end
 
 -- ═══════════════════════════════════════════════════════════
@@ -286,465 +286,465 @@ end
 local cY = 0
 
 local function ClearContent()
-	for _, ch in ipairs(CA:GetChildren()) do
-		if ch:IsA("Frame") or ch:IsA("TextButton") or ch:IsA("TextBox") then
-			ch:Destroy()
-		end
-	end
-	cY = 0
+    for _, ch in ipairs(CA:GetChildren()) do
+        if ch:IsA("Frame") or ch:IsA("TextButton") or ch:IsA("TextBox") then
+            ch:Destroy()
+        end
+    end
+    cY = 0
 end
 
 local function AddSection(text)
-	local l = Instance.new("TextLabel")
-	l.Size = UDim2.new(1, -10, 0, 22)
-	l.Position = UDim2.new(0, 5, 0, cY)
-	l.BackgroundTransparency = 1
-	l.Font = Enum.Font.Code
-	l.TextSize = 12
-	l.TextColor3 = Color3.fromRGB(0, 255, 100)
-	l.TextXAlignment = Enum.TextXAlignment.Left
-	l.Text = "── " .. text .. " " .. string.rep("─", math.max(1, 42 - #text))
-	l.ZIndex = 10
-	l.Parent = CA
-	cY = cY + 26
+    local l = Instance.new("TextLabel")
+    l.Size = UDim2.new(1, -10, 0, 22)
+    l.Position = UDim2.new(0, 5, 0, cY)
+    l.BackgroundTransparency = 1
+    l.Font = Enum.Font.Code
+    l.TextSize = 12
+    l.TextColor3 = Color3.fromRGB(0, 255, 100)
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.Text = "── " .. text .. " " .. string.rep("─", math.max(1, 42 - #text))
+    l.ZIndex = 10
+    l.Parent = CA
+    cY = cY + 26
 end
 
 local function AddToggle(text, cb)
-	local f = Instance.new("Frame")
-	f.Size = UDim2.new(1, -10, 0, 32)
-	f.Position = UDim2.new(0, 5, 0, cY)
-	f.BackgroundColor3 = Color3.fromRGB(0, 15, 0)
-	f.BorderSizePixel = 0
-	f.ZIndex = 10
-	f.Parent = CA
-	Instance.new("UICorner", f).CornerRadius = UDim.new(0, 4)
+    local f = Instance.new("Frame")
+    f.Size = UDim2.new(1, -10, 0, 32)
+    f.Position = UDim2.new(0, 5, 0, cY)
+    f.BackgroundColor3 = Color3.fromRGB(0, 15, 0)
+    f.BorderSizePixel = 0
+    f.ZIndex = 10
+    f.Parent = CA
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 4)
 
-	local lb = Instance.new("TextLabel")
-	lb.Size = UDim2.new(1, -60, 1, 0)
-	lb.Position = UDim2.new(0, 10, 0, 0)
-	lb.BackgroundTransparency = 1
-	lb.Font = Enum.Font.Code
-	lb.TextSize = 11
-	lb.TextColor3 = Color3.fromRGB(0, 200, 0)
-	lb.TextXAlignment = Enum.TextXAlignment.Left
-	lb.Text = text
-	lb.ZIndex = 11
-	lb.Parent = f
+    local lb = Instance.new("TextLabel")
+    lb.Size = UDim2.new(1, -60, 1, 0)
+    lb.Position = UDim2.new(0, 10, 0, 0)
+    lb.BackgroundTransparency = 1
+    lb.Font = Enum.Font.Code
+    lb.TextSize = 11
+    lb.TextColor3 = Color3.fromRGB(0, 200, 0)
+    lb.TextXAlignment = Enum.TextXAlignment.Left
+    lb.Text = text
+    lb.ZIndex = 11
+    lb.Parent = f
 
-	local tg = Instance.new("TextButton")
-	tg.Size = UDim2.new(0, 44, 0, 20)
-	tg.Position = UDim2.new(1, -52, 0.5, -10)
-	tg.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-	tg.Font = Enum.Font.Code
-	tg.TextSize = 10
-	tg.TextColor3 = Color3.fromRGB(200, 50, 50)
-	tg.Text = "[OFF]"
-	tg.ZIndex = 12
-	tg.Parent = f
-	Instance.new("UICorner", tg).CornerRadius = UDim.new(0, 3)
+    local tg = Instance.new("TextButton")
+    tg.Size = UDim2.new(0, 44, 0, 20)
+    tg.Position = UDim2.new(1, -52, 0.5, -10)
+    tg.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+    tg.Font = Enum.Font.Code
+    tg.TextSize = 10
+    tg.TextColor3 = Color3.fromRGB(200, 50, 50)
+    tg.Text = "[OFF]"
+    tg.ZIndex = 12
+    tg.Parent = f
+    Instance.new("UICorner", tg).CornerRadius = UDim.new(0, 3)
 
-	local on = false
-	tg.MouseButton1Click:Connect(function()
-		on = not on
-		if on then
-			tg.BackgroundColor3 = Color3.fromRGB(0, 40, 0)
-			tg.TextColor3 = Color3.fromRGB(0, 255, 70)
-			tg.Text = "[ON ]"
-			Log("[ON] " .. text)
-		else
-			tg.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-			tg.TextColor3 = Color3.fromRGB(200, 50, 50)
-			tg.Text = "[OFF]"
-			Log("[OFF] " .. text)
-		end
-		cb(on)
-	end)
-	cY = cY + 36
-	return tg
+    local on = false
+    tg.MouseButton1Click:Connect(function()
+        on = not on
+        if on then
+            tg.BackgroundColor3 = Color3.fromRGB(0, 40, 0)
+            tg.TextColor3 = Color3.fromRGB(0, 255, 70)
+            tg.Text = "[ON ]"
+            Log("[ON] " .. text)
+        else
+            tg.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+            tg.TextColor3 = Color3.fromRGB(200, 50, 50)
+            tg.Text = "[OFF]"
+            Log("[OFF] " .. text)
+        end
+        cb(on)
+    end)
+    cY = cY + 36
+    return tg
 end
 
 local function AddButton(text, cb)
-	local b = Instance.new("TextButton")
-	b.Size = UDim2.new(1, -10, 0, 30)
-	b.Position = UDim2.new(0, 5, 0, cY)
-	b.BackgroundColor3 = Color3.fromRGB(0, 25, 0)
-	b.Font = Enum.Font.Code
-	b.TextSize = 11
-	b.TextColor3 = Color3.fromRGB(0, 220, 0)
-	b.Text = "[EXEC] " .. text
-	b.ZIndex = 10
-	b.Parent = CA
-	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 4)
-	local bs = Instance.new("UIStroke", b)
-	bs.Color = Color3.fromRGB(0, 120, 0)
-	bs.Thickness = 1
-	b.MouseEnter:Connect(function() b.BackgroundColor3 = Color3.fromRGB(0, 50, 0) end)
-	b.MouseLeave:Connect(function() b.BackgroundColor3 = Color3.fromRGB(0, 25, 0) end)
-	b.MouseButton1Click:Connect(function()
-		Log("[CMD] " .. text)
-		cb()
-	end)
-	cY = cY + 34
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(1, -10, 0, 30)
+    b.Position = UDim2.new(0, 5, 0, cY)
+    b.BackgroundColor3 = Color3.fromRGB(0, 25, 0)
+    b.Font = Enum.Font.Code
+    b.TextSize = 11
+    b.TextColor3 = Color3.fromRGB(0, 220, 0)
+    b.Text = "[EXEC] " .. text
+    b.ZIndex = 10
+    b.Parent = CA
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 4)
+    local bs = Instance.new("UIStroke", b)
+    bs.Color = Color3.fromRGB(0, 120, 0)
+    bs.Thickness = 1
+    b.MouseEnter:Connect(function() b.BackgroundColor3 = Color3.fromRGB(0, 50, 0) end)
+    b.MouseLeave:Connect(function() b.BackgroundColor3 = Color3.fromRGB(0, 25, 0) end)
+    b.MouseButton1Click:Connect(function()
+        Log("[CMD] " .. text)
+        cb()
+    end)
+    cY = cY + 34
 end
 
 local function AddInput(placeholder, cb)
-	local fr = Instance.new("Frame")
-	fr.Size = UDim2.new(1, -10, 0, 32)
-	fr.Position = UDim2.new(0, 5, 0, cY)
-	fr.BackgroundTransparency = 1
-	fr.ZIndex = 10
-	fr.Parent = CA
+    local fr = Instance.new("Frame")
+    fr.Size = UDim2.new(1, -10, 0, 32)
+    fr.Position = UDim2.new(0, 5, 0, cY)
+    fr.BackgroundTransparency = 1
+    fr.ZIndex = 10
+    fr.Parent = CA
 
-	local inp = Instance.new("TextBox")
-	inp.Size = UDim2.new(1, -80, 0, 24)
-	inp.Position = UDim2.new(0, 0, 0, 4)
-	inp.BackgroundColor3 = Color3.fromRGB(0, 12, 0)
-	inp.Font = Enum.Font.Code
-	inp.TextSize = 11
-	inp.TextColor3 = Color3.fromRGB(0, 220, 0)
-	inp.PlaceholderText = placeholder
-	inp.PlaceholderColor3 = Color3.fromRGB(0, 80, 0)
-	inp.Text = ""
-	inp.ZIndex = 11
-	inp.ClearTextOnFocus = false
-	inp.Parent = fr
-	Instance.new("UIStroke", inp).Color = Color3.fromRGB(0, 80, 0)
-	Instance.new("UICorner", inp).CornerRadius = UDim.new(0, 3)
+    local inp = Instance.new("TextBox")
+    inp.Size = UDim2.new(1, -80, 0, 24)
+    inp.Position = UDim2.new(0, 0, 0, 4)
+    inp.BackgroundColor3 = Color3.fromRGB(0, 12, 0)
+    inp.Font = Enum.Font.Code
+    inp.TextSize = 11
+    inp.TextColor3 = Color3.fromRGB(0, 220, 0)
+    inp.PlaceholderText = placeholder
+    inp.PlaceholderColor3 = Color3.fromRGB(0, 80, 0)
+    inp.Text = ""
+    inp.ZIndex = 11
+    inp.ClearTextOnFocus = false
+    inp.Parent = fr
+    Instance.new("UIStroke", inp).Color = Color3.fromRGB(0, 80, 0)
+    Instance.new("UICorner", inp).CornerRadius = UDim.new(0, 3)
 
-	local eb = Instance.new("TextButton")
-	eb.Size = UDim2.new(0, 65, 0, 24)
-	eb.Position = UDim2.new(1, -70, 0, 4)
-	eb.BackgroundColor3 = Color3.fromRGB(0, 40, 0)
-	eb.Font = Enum.Font.Code
-	eb.TextSize = 10
-	eb.TextColor3 = Color3.fromRGB(0, 255, 70)
-	eb.Text = "RUN >"
-	eb.ZIndex = 12
-	eb.Parent = fr
-	Instance.new("UICorner", eb).CornerRadius = UDim.new(0, 3)
-	eb.MouseButton1Click:Connect(function()
-		if inp.Text ~= "" then
-			Log("[CMD] " .. placeholder .. ": " .. inp.Text)
-			cb(inp.Text)
-		end
-	end)
-	cY = cY + 36
+    local eb = Instance.new("TextButton")
+    eb.Size = UDim2.new(0, 65, 0, 24)
+    eb.Position = UDim2.new(1, -70, 0, 4)
+    eb.BackgroundColor3 = Color3.fromRGB(0, 40, 0)
+    eb.Font = Enum.Font.Code
+    eb.TextSize = 10
+    eb.TextColor3 = Color3.fromRGB(0, 255, 70)
+    eb.Text = "RUN >"
+    eb.ZIndex = 12
+    eb.Parent = fr
+    Instance.new("UICorner", eb).CornerRadius = UDim.new(0, 3)
+    eb.MouseButton1Click:Connect(function()
+        if inp.Text ~= "" then
+            Log("[CMD] " .. placeholder .. ": " .. inp.Text)
+            cb(inp.Text)
+        end
+    end)
+    cY = cY + 36
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // TAB: MAIN
 -- ═══════════════════════════════════════════════════════════
 local function BuildMainTab()
-	ClearContent()
-	AddSection("MAIN CONTROLS")
+    ClearContent()
+    AddSection("MAIN CONTROLS")
 
-	AddToggle("Auto Sell All Assets", function(on)
-		_G.AutoSell = on
-		if on then spawn(function() while _G.AutoSell do pcall(function() RE("AssetInventory:SellAllAssets"):FireServer() end) wait(30) end end) end
-	end)
+    AddToggle("Auto Sell All Assets", function(on)
+        _G.AutoSell = on
+        if on then spawn(function() while _G.AutoSell do pcall(function() RE("AssetInventory:SellAllAssets"):FireServer() end) wait(30) end end) end
+    end)
 
-	AddToggle("Auto Equip Best Backpack", function(on)
-		_G.AutoEquipBest = on
-		if on then spawn(function() while _G.AutoEquipBest do pcall(function() RF("Backpack:EquipBest"):InvokeServer() end) wait(10) end end) end
-	end)
+    AddToggle("Auto Equip Best Backpack", function(on)
+        _G.AutoEquipBest = on
+        if on then spawn(function() while _G.AutoEquipBest do pcall(function() RF("Backpack:EquipBest"):InvokeServer() end) wait(10) end end) end
+    end)
 
-	AddToggle("Auto Rebirth", function(on)
-		_G.AutoRebirth = on
-		if on then spawn(function() while _G.AutoRebirth do pcall(function() RF("Rebirth:RequestRebirth"):InvokeServer() wait(1) RF("Rebirth:RequestRebirthCommit"):InvokeServer() end) wait(5) end end) end
-	end)
+    AddToggle("Auto Rebirth", function(on)
+        _G.AutoRebirth = on
+        if on then spawn(function() while _G.AutoRebirth do pcall(function() RF("Rebirth:RequestRebirth"):InvokeServer() wait(1) RF("Rebirth:RequestRebirthCommit"):InvokeServer() end) wait(5) end end) end
+    end)
 
-	AddToggle("Auto Claim Free Gifts", function(on)
-		_G.ClaimGifts = on
-		if on then spawn(function() while _G.ClaimGifts do pcall(function() RF("FreeGifts:RequestClaim"):InvokeServer() end) wait(10) end end) end
-	end)
+    AddToggle("Auto Claim Free Gifts", function(on)
+        _G.ClaimGifts = on
+        if on then spawn(function() while _G.ClaimGifts do pcall(function() RF("FreeGifts:RequestClaim"):InvokeServer() end) wait(10) end end) end
+    end)
 
-	AddToggle("Auto Claim Index Rewards", function(on)
-		_G.AutoClaimIndex = on
-		if on then spawn(function() while _G.AutoClaimIndex do pcall(function() RF("Index:RequestClaimAll"):InvokeServer() end) wait(15) end end) end
-	end)
+    AddToggle("Auto Claim Index Rewards", function(on)
+        _G.AutoClaimIndex = on
+        if on then spawn(function() while _G.AutoClaimIndex do pcall(function() RF("Index:RequestClaimAll"):InvokeServer() end) wait(15) end end) end
+    end)
 
-	AddSection("STATS")
-	AddButton("Fetch Player Stats", function()
-		pcall(function() Log("[INFO] Stats: " .. tostring(RF("Get Stats"):InvokeServer())) end)
-	end)
-	AddButton("Get Experiment Data", function()
-		pcall(function() Log("[INFO] Experiments: " .. tostring(RF("Experiments:Get"):InvokeServer())) end)
-	end)
+    AddSection("STATS")
+    AddButton("Fetch Player Stats", function()
+        pcall(function() Log("[INFO] Stats: " .. tostring(RF("Get Stats"):InvokeServer())) end)
+    end)
+    AddButton("Get Experiment Data", function()
+        pcall(function() Log("[INFO] Experiments: " .. tostring(RF("Experiments:Get"):InvokeServer())) end)
+    end)
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // TAB: TREADMILL
 -- ═══════════════════════════════════════════════════════════
 local function BuildTreadmillTab()
-	ClearContent()
-	AddSection("TREADMILL CONTROLS")
+    ClearContent()
+    AddSection("TREADMILL CONTROLS")
 
-	AddToggle("Anti Slow Mode (force off)", function(on)
-		_G.NoSlow = on
-		if on then spawn(function() while _G.NoSlow do pcall(function() RF("Treadmills:RequestSetSlowToggleEnabled"):InvokeServer(false) end) wait(5) end end) end
-	end)
+    AddToggle("Anti Slow Mode (force off)", function(on)
+        _G.NoSlow = on
+        if on then spawn(function() while _G.NoSlow do pcall(function() RF("Treadmills:RequestSetSlowToggleEnabled"):InvokeServer(false) end) wait(5) end end) end
+    end)
 
-	AddInput("Set Media Index (number)", function(val)
-		pcall(function()
-			local n = tonumber(val)
-			if n then RE("Treadmills:UpdateMediaIndex"):FireServer(n) Log("[TREAD] Media -> " .. n) end
-		end)
-	end)
+    AddInput("Set Media Index (number)", function(val)
+        pcall(function()
+            local n = tonumber(val)
+            if n then RE("Treadmills:UpdateMediaIndex"):FireServer(n) Log("[TREAD] Media -> " .. n) end
+        end)
+    end)
 
-	AddInput("Purchase Treadmill (id)", function(val)
-		pcall(function()
-			local id = tonumber(val)
-			if id then Log("[TREAD] Result: " .. tostring(RF("Treadmills:RequestPurchase"):InvokeServer(id))) end
-		end)
-	end)
+    AddInput("Purchase Treadmill (id)", function(val)
+        pcall(function()
+            local id = tonumber(val)
+            if id then Log("[TREAD] Result: " .. tostring(RF("Treadmills:RequestPurchase"):InvokeServer(id))) end
+        end)
+    end)
 
-	AddButton("Equip Selected Treadmill", function() pcall(function() RF("Treadmills:RequestEquip"):InvokeServer() Log("[TREAD] Equipped") end) end)
-	AddButton("Unequip Treadmill", function() pcall(function() RF("Treadmills:RequestUnequip"):InvokeServer() Log("[TREAD] Unequipped") end) end)
-	AddButton("Select Treadmill", function() pcall(function() RF("Treadmills:RequestSelect"):InvokeServer() Log("[TREAD] Selected") end) end)
-	AddButton("Check Slow Toggle State", function() pcall(function() Log("[TREAD] Slow: " .. tostring(RF("Treadmills:RequestGetSlowToggleState"):InvokeServer())) end) end)
+    AddButton("Equip Selected Treadmill", function() pcall(function() RF("Treadmills:RequestEquip"):InvokeServer() Log("[TREAD] Equipped") end) end)
+    AddButton("Unequip Treadmill", function() pcall(function() RF("Treadmills:RequestUnequip"):InvokeServer() Log("[TREAD] Unequipped") end) end)
+    AddButton("Select Treadmill", function() pcall(function() RF("Treadmills:RequestSelect"):InvokeServer() Log("[TREAD] Selected") end) end)
+    AddButton("Check Slow Toggle State", function() pcall(function() Log("[TREAD] Slow: " .. tostring(RF("Treadmills:RequestGetSlowToggleState"):InvokeServer())) end) end)
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // TAB: ASSETS
 -- ═══════════════════════════════════════════════════════════
 local function BuildAssetsTab()
-	ClearContent()
-	AddSection("ASSET MANAGEMENT")
+    ClearContent()
+    AddSection("ASSET MANAGEMENT")
 
-	AddToggle("Auto Upgrade Assets", function(on)
-		_G.AutoUpgrade = on
-		if on then spawn(function() while _G.AutoUpgrade do pcall(function() RF("ActiveAssets:RequestUpgrade"):InvokeServer() end) wait(3) end end) end
-	end)
+    AddToggle("Auto Upgrade Assets", function(on)
+        _G.AutoUpgrade = on
+        if on then spawn(function() while _G.AutoUpgrade do pcall(function() RF("ActiveAssets:RequestUpgrade"):InvokeServer() end) wait(3) end end) end
+    end)
 
-	AddToggle("Auto Claim Generated", function(on)
-		_G.AutoClaimGen = on
-		if on then spawn(function() while _G.AutoClaimGen do pcall(function() RF("ActiveAssets:ClaimGenerated"):InvokeServer() end) wait(5) end end) end
-	end)
+    AddToggle("Auto Claim Generated", function(on)
+        _G.AutoClaimGen = on
+        if on then spawn(function() while _G.AutoClaimGen do pcall(function() RF("ActiveAssets:ClaimGenerated"):InvokeServer() end) wait(5) end end) end
+    end)
 
-	AddToggle("Auto Place Assets", function(on)
-		_G.AutoPlace = on
-		if on then spawn(function() while _G.AutoPlace do pcall(function() RF("ActiveAssets:Place"):InvokeServer() end) wait(2) end end) end
-	end)
+    AddToggle("Auto Place Assets", function(on)
+        _G.AutoPlace = on
+        if on then spawn(function() while _G.AutoPlace do pcall(function() RF("ActiveAssets:Place"):InvokeServer() end) wait(2) end end) end
+    end)
 
-	AddButton("Sell All Now", function() pcall(function() RE("AssetInventory:SellAllAssets"):FireServer() Log("[ASSET] Sold all") end) end)
-	AddButton("Pick Up Asset", function() pcall(function() RF("ActiveAssets:RequestPickUp"):InvokeServer() Log("[ASSET] Picked up") end) end)
-	AddButton("Sell Single Asset", function() pcall(function() RE("AssetInventory:SellAsset"):FireServer() Log("[ASSET] Sold single") end) end)
+    AddButton("Sell All Now", function() pcall(function() RE("AssetInventory:SellAllAssets"):FireServer() Log("[ASSET] Sold all") end) end)
+    AddButton("Pick Up Asset", function() pcall(function() RF("ActiveAssets:RequestPickUp"):InvokeServer() Log("[ASSET] Picked up") end) end)
+    AddButton("Sell Single Asset", function() pcall(function() RE("AssetInventory:SellAsset"):FireServer() Log("[ASSET] Sold single") end) end)
 
-	AddSection("OFFLINE ASSETS")
-	AddButton("Redeem Offline", function() pcall(function() RF("OfflineAssets:Redeem"):InvokeServer() Log("[ASSET] Offline redeemed") end) end)
-	AddButton("Get Offline Summary", function() pcall(function() Log("[ASSET] Summary: " .. tostring(RF("OfflineAssets:GetSummary"):InvokeServer())) end) end)
-	AddButton("Check Offline Pending", function() pcall(function() Log("[ASSET] Pending: " .. tostring(RF("OfflineAssets:IsStatePending"):InvokeServer())) end) end)
+    AddSection("OFFLINE ASSETS")
+    AddButton("Redeem Offline", function() pcall(function() RF("OfflineAssets:Redeem"):InvokeServer() Log("[ASSET] Offline redeemed") end) end)
+    AddButton("Get Offline Summary", function() pcall(function() Log("[ASSET] Summary: " .. tostring(RF("OfflineAssets:GetSummary"):InvokeServer())) end) end)
+    AddButton("Check Offline Pending", function() pcall(function() Log("[ASSET] Pending: " .. tostring(RF("OfflineAssets:IsStatePending"):InvokeServer())) end) end)
 
-	AddSection("TRAILS")
-	AddButton("Equip Trail", function() pcall(function() RF("Trails:RequestEquip"):InvokeServer() Log("[ASSET] Trail equipped") end) end)
-	AddButton("Unequip Trail", function() pcall(function() RF("Trails:RequestUnequip"):InvokeServer() Log("[ASSET] Trail unequipped") end) end)
-	AddButton("Select Trail", function() pcall(function() RF("Trails:RequestSelect"):InvokeServer() Log("[ASSET] Trail selected") end) end)
+    AddSection("TRAILS")
+    AddButton("Equip Trail", function() pcall(function() RF("Trails:RequestEquip"):InvokeServer() Log("[ASSET] Trail equipped") end) end)
+    AddButton("Unequip Trail", function() pcall(function() RF("Trails:RequestUnequip"):InvokeServer() Log("[ASSET] Trail unequipped") end) end)
+    AddButton("Select Trail", function() pcall(function() RF("Trails:RequestSelect"):InvokeServer() Log("[ASSET] Trail selected") end) end)
 
-	AddSection("BACKPACK")
-	AddToggle("Auto-Sell Toggle", function(on)
-		_G.BPAutoSell = on
-		pcall(function() RF("Backpack:SetAutoSellState"):InvokeServer(on) Log("[ASSET] Auto-sell: " .. tostring(on)) end)
-	end)
-	AddButton("Check Auto-Sell State", function() pcall(function() Log("[ASSET] State: " .. tostring(RF("Backpack:GetAutoSellState"):InvokeServer())) end) end)
-	AddButton("Equip Best Status", function() pcall(function() Log("[ASSET] Best: " .. tostring(RF("Backpack:GetEquipBestStatus"):InvokeServer())) end) end)
+    AddSection("BACKPACK")
+    AddToggle("Auto-Sell Toggle", function(on)
+        _G.BPAutoSell = on
+        pcall(function() RF("Backpack:SetAutoSellState"):InvokeServer(on) Log("[ASSET] Auto-sell: " .. tostring(on)) end)
+    end)
+    AddButton("Check Auto-Sell State", function() pcall(function() Log("[ASSET] State: " .. tostring(RF("Backpack:GetAutoSellState"):InvokeServer())) end) end)
+    AddButton("Equip Best Status", function() pcall(function() Log("[ASSET] Best: " .. tostring(RF("Backpack:GetEquipBestStatus"):InvokeServer())) end) end)
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // TAB: GUARDS
 -- ═══════════════════════════════════════════════════════════
 local function BuildGuardsTab()
-	ClearContent()
-	AddSection("GUARD AUTOMATION")
+    ClearContent()
+    AddSection("GUARD AUTOMATION")
 
-	AddToggle("Auto Lucky Block Runs", function(on)
-		_G.AutoGuardRun = on
-		if on then spawn(function() while _G.AutoGuardRun do pcall(function() RF("Guards:RequestBeginLuckyBlockRun"):InvokeServer() wait(2) RF("Guards:RequestLaunchLuckyBlockRun"):InvokeServer() end) wait(10) end end) end
-	end)
+    AddToggle("Auto Lucky Block Runs", function(on)
+        _G.AutoGuardRun = on
+        if on then spawn(function() while _G.AutoGuardRun do pcall(function() RF("Guards:RequestBeginLuckyBlockRun"):InvokeServer() wait(2) RF("Guards:RequestLaunchLuckyBlockRun"):InvokeServer() end) wait(10) end end) end
+    end)
 
-	AddToggle("Auto Reveal Caught", function(on)
-		_G.AutoCaught = on
-		if on then spawn(function() while _G.AutoCaught do pcall(function() RF("Guards:RequestBeginCaughtReveal"):InvokeServer() wait(1) RF("Guards:RequestFinalizeCaughtReward"):InvokeServer() end) wait(5) end end) end
-	end)
+    AddToggle("Auto Reveal Caught", function(on)
+        _G.AutoCaught = on
+        if on then spawn(function() while _G.AutoCaught do pcall(function() RF("Guards:RequestBeginCaughtReveal"):InvokeServer() wait(1) RF("Guards:RequestFinalizeCaughtReward"):InvokeServer() end) wait(5) end end) end
+    end)
 
-	AddToggle("Auto Recover Lost Rewards", function(on)
-		_G.AutoLost = on
-		if on then spawn(function() while _G.AutoLost do pcall(function() RF("Guards:RequestPrepareLostRewardRecovery"):InvokeServer() end) wait(15) end end) end
-	end)
+    AddToggle("Auto Recover Lost Rewards", function(on)
+        _G.AutoLost = on
+        if on then spawn(function() while _G.AutoLost do pcall(function() RF("Guards:RequestPrepareLostRewardRecovery"):InvokeServer() end) wait(15) end end) end
+    end)
 
-	AddToggle("Auto Sell Guard Inventory", function(on)
-		_G.AutoSellGuard = on
-		if on then spawn(function() while _G.AutoSellGuard do pcall(function() RE("Guards:RequestFullInventorySellPrompt"):FireServer() end) wait(30) end end) end
-	end)
+    AddToggle("Auto Sell Guard Inventory", function(on)
+        _G.AutoSellGuard = on
+        if on then spawn(function() while _G.AutoSellGuard do pcall(function() RE("Guards:RequestFullInventorySellPrompt"):FireServer() end) wait(30) end end) end
+    end)
 
-	AddSection("GUARD ACTIONS")
-	AddButton("Get Guard Areas", function() pcall(function() Log("[GUARD] Areas: " .. tostring(RF("Guards:RequestGuardAreas"):InvokeServer())) end) end)
-	AddButton("Walk Speed Power", function() pcall(function() RE("Guards:RequestWalkSpeedPowerGain"):FireServer() Log("[GUARD] Speed power requested") end) end)
-	AddButton("Caught Return", function() pcall(function() RE("Guards:RequestCaughtReturn"):FireServer() Log("[GUARD] Caught return") end) end)
+    AddSection("GUARD ACTIONS")
+    AddButton("Get Guard Areas", function() pcall(function() Log("[GUARD] Areas: " .. tostring(RF("Guards:RequestGuardAreas"):InvokeServer())) end) end)
+    AddButton("Walk Speed Power", function() pcall(function() RE("Guards:RequestWalkSpeedPowerGain"):FireServer() Log("[GUARD] Speed power requested") end) end)
+    AddButton("Caught Return", function() pcall(function() RE("Guards:RequestCaughtReturn"):FireServer() Log("[GUARD] Caught return") end) end)
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // TAB: TRADING
 -- ═══════════════════════════════════════════════════════════
 local function BuildTradingTab()
-	ClearContent()
-	AddSection("TRADING")
+    ClearContent()
+    AddSection("TRADING")
 
-	AddToggle("Auto Accept Trades", function(on)
-		_G.AutoAccept = on
-		if on then
-			pcall(function()
-				R("Trading:Request"):OnClientEvent(function(...)
-					if _G.AutoAccept then
-						Log("[TRADE] Auto-accepting...")
-						pcall(function() RF("Server: Trading: Set Ready"):InvokeServer(true) end)
-						pcall(function() RF("Server: Trading: Set Confirmed"):InvokeServer(true) end)
-					end
-				end)
-			end)
-		end
-	end)
+    AddToggle("Auto Accept Trades", function(on)
+        _G.AutoAccept = on
+        if on then
+            pcall(function()
+                R("Trading:Request"):OnClientEvent(function(...)
+                    if _G.AutoAccept then
+                        Log("[TRADE] Auto-accepting...")
+                        pcall(function() RF("Server: Trading: Set Ready"):InvokeServer(true) end)
+                        pcall(function() RF("Server: Trading: Set Confirmed"):InvokeServer(true) end)
+                    end
+                end)
+            end)
+        end
+    end)
 
-	AddToggle("Auto Reject Trades", function(on)
-		_G.AutoReject = on
-		if on then
-			pcall(function()
-				R("Trading:Request"):OnClientEvent(function(...)
-					if _G.AutoReject then
-						Log("[TRADE] Auto-rejecting")
-						pcall(function() RF("Server: Trading: Reject"):InvokeServer() end)
-					end
-				end)
-			end)
-		end
-	end)
+    AddToggle("Auto Reject Trades", function(on)
+        _G.AutoReject = on
+        if on then
+            pcall(function()
+                R("Trading:Request"):OnClientEvent(function(...)
+                    if _G.AutoReject then
+                        Log("[TRADE] Auto-rejecting")
+                        pcall(function() RF("Server: Trading: Reject"):InvokeServer() end)
+                    end
+                end)
+            end)
+        end
+    end)
 
-	AddButton("Decline Trade", function() pcall(function() RF("Server: Trading: Decline"):InvokeServer() Log("[TRADE] Declined") end) end)
-	AddButton("Send Trade Request", function() pcall(function() RE("Trading:Request"):FireServer() Log("[TRADE] Sent") end) end)
+    AddButton("Decline Trade", function() pcall(function() RF("Server: Trading: Decline"):InvokeServer() Log("[TRADE] Declined") end) end)
+    AddButton("Send Trade Request", function() pcall(function() RE("Trading:Request"):FireServer() Log("[TRADE] Sent") end) end)
 
-	AddSection("STEAL")
-	AddToggle("Auto Steal Target Assets", function(on)
-		_G.AutoSteal = on
-		if on then spawn(function() while _G.AutoSteal do pcall(function() local t = RF("ActiveAssets:RequestStealTarget"):InvokeServer() if t then Log("[STEAL] Target: " .. tostring(t)) end end) wait(5) end end) end
-	end)
+    AddSection("STEAL")
+    AddToggle("Auto Steal Target Assets", function(on)
+        _G.AutoSteal = on
+        if on then spawn(function() while _G.AutoSteal do pcall(function() local t = RF("ActiveAssets:RequestStealTarget"):InvokeServer() if t then Log("[STEAL] Target: " .. tostring(t)) end end) wait(5) end end) end
+    end)
 
-	AddSection("GIFTING")
-	AddButton("Send Gift", function() pcall(function() RE("Gifting:Request"):FireServer() Log("[GIFT] Sent") end) end)
-	AddButton("Friend Gift Request", function() pcall(function() RE("Gifting:Friend Request"):FireServer() Log("[GIFT] Friend request sent") end) end)
+    AddSection("GIFTING")
+    AddButton("Send Gift", function() pcall(function() RE("Gifting:Request"):FireServer() Log("[GIFT] Sent") end) end)
+    AddButton("Friend Gift Request", function() pcall(function() RE("Gifting:Friend Request"):FireServer() Log("[GIFT] Friend request sent") end) end)
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // TAB: MISC
 -- ═══════════════════════════════════════════════════════════
 local function BuildMiscTab()
-	ClearContent()
+    ClearContent()
 
-	AddSection("LUCKY BLOCK")
-	AddToggle("Auto Open Stored Blocks", function(on)
-		_G.AutoLucky = on
-		if on then spawn(function() while _G.AutoLucky do pcall(function() RF("LuckyBlock:RequestStoredBlockOpenClaim"):InvokeServer() end) wait(5) end end) end
-	end)
-	AddButton("Debug: Grant Stored Blocks", function() pcall(function() Log("[LUCKY] " .. tostring(RF("LuckyBlock:RequestDebugGrantStoredBlocks"):InvokeServer())) end) end)
+    AddSection("LUCKY BLOCK")
+    AddToggle("Auto Open Stored Blocks", function(on)
+        _G.AutoLucky = on
+        if on then spawn(function() while _G.AutoLucky do pcall(function() RF("LuckyBlock:RequestStoredBlockOpenClaim"):InvokeServer() end) wait(5) end end) end
+    end)
+    AddButton("Debug: Grant Stored Blocks", function() pcall(function() Log("[LUCKY] " .. tostring(RF("LuckyBlock:RequestDebugGrantStoredBlocks"):InvokeServer())) end) end)
 
-	AddSection("CODES")
-	AddInput("Enter promo code", function(code)
-		pcall(function() Log("[CODE] " .. tostring(RF("Codes:Claim"):InvokeServer(code))) end)
-	end)
-	AddButton("Get Active Code States", function() pcall(function() Log("[CODE] " .. tostring(RF("Codes:Get Active Code State"):InvokeServer())) end) end)
+    AddSection("CODES")
+    AddInput("Enter promo code", function(code)
+        pcall(function() Log("[CODE] " .. tostring(RF("Codes:Claim"):InvokeServer(code))) end)
+    end)
+    AddButton("Get Active Code States", function() pcall(function() Log("[CODE] " .. tostring(RF("Codes:Get Active Code State"):InvokeServer())) end) end)
 
-	AddSection("FUSE MACHINE")
-	AddButton("Get Fusion Slots", function() pcall(function() Log("[FUSE] " .. tostring(RF("FuseMachine:GetFusionSlots"):InvokeServer())) end) end)
-	AddButton("Clear Fuse Slots", function() pcall(function() RF("FuseMachine:ClearSlots"):InvokeServer() Log("[FUSE] Cleared") end) end)
-	AddButton("Claim Fuse Reward", function() pcall(function() Log("[FUSE] " .. tostring(RF("FuseMachine:ClaimReward"):InvokeServer())) end) end)
-	AddButton("Check Fuse Requirements", function() pcall(function() Log("[FUSE] " .. tostring(RF("FuseMachine:RequireFuseMobs"):InvokeServer())) end) end)
-	AddInput("Insert Mob into Slot (id)", function(val)
-		pcall(function() local id = tonumber(val) if id then RF("FuseMachine:InsertMob"):InvokeServer(id) Log("[FUSE] Inserted: " .. id) end end)
-	end)
+    AddSection("FUSE MACHINE")
+    AddButton("Get Fusion Slots", function() pcall(function() Log("[FUSE] " .. tostring(RF("FuseMachine:GetFusionSlots"):InvokeServer())) end) end)
+    AddButton("Clear Fuse Slots", function() pcall(function() RF("FuseMachine:ClearSlots"):InvokeServer() Log("[FUSE] Cleared") end) end)
+    AddButton("Claim Fuse Reward", function() pcall(function() Log("[FUSE] " .. tostring(RF("FuseMachine:ClaimReward"):InvokeServer())) end) end)
+    AddButton("Check Fuse Requirements", function() pcall(function() Log("[FUSE] " .. tostring(RF("FuseMachine:RequireFuseMobs"):InvokeServer())) end) end)
+    AddInput("Insert Mob into Slot (id)", function(val)
+        pcall(function() local id = tonumber(val) if id then RF("FuseMachine:InsertMob"):InvokeServer(id) Log("[FUSE] Inserted: " .. id) end end)
+    end)
 
-	AddSection("PLOT / BASE")
-	AddToggle("Auto Upgrade Base", function(on)
-		_G.AutoBase = on
-		if on then spawn(function() while _G.AutoBase do pcall(function() RE("Plots:RequestBaseUpgrade"):FireServer() end) wait(10) end end) end
-	end)
-	AddButton("Teleport to Lobby", function() pcall(function() RE("Plots:RequestLobbyTeleport"):FireServer() Log("[PLOT] Teleporting...") end) end)
-	AddButton("Get Plot State", function() pcall(function() Log("[PLOT] " .. tostring(RF("Plots:RequestState"):InvokeServer())) end) end)
+    AddSection("PLOT / BASE")
+    AddToggle("Auto Upgrade Base", function(on)
+        _G.AutoBase = on
+        if on then spawn(function() while _G.AutoBase do pcall(function() RE("Plots:RequestBaseUpgrade"):FireServer() end) wait(10) end end) end
+    end)
+    AddButton("Teleport to Lobby", function() pcall(function() RE("Plots:RequestLobbyTeleport"):FireServer() Log("[PLOT] Teleporting...") end) end)
+    AddButton("Get Plot State", function() pcall(function() Log("[PLOT] " .. tostring(RF("Plots:RequestState"):InvokeServer())) end) end)
 
-	AddSection("GROUP / REWARDS")
-	AddButton("Claim Group Reward", function() pcall(function() Log("[GROUP] " .. tostring(RF("GroupReward:ClaimReward"):InvokeServer())) end) end)
+    AddSection("GROUP / REWARDS")
+    AddButton("Claim Group Reward", function() pcall(function() Log("[GROUP] " .. tostring(RF("GroupReward:ClaimReward"):InvokeServer())) end) end)
 
-	AddSection("ADMIN PANEL")
-	AddButton("Check Admin Status", function() pcall(function() RE("AdminPanel_CheckAdminStatus"):FireServer() Log("[ADMIN] Check fired") end) end)
-	AddButton("Reset Self Data", function() pcall(function() RE("AdminPanel_ResetSelfData"):FireServer() Log("[ADMIN] Reset fired") end) end)
-	AddButton("Give Asset To Self", function() pcall(function() RE("AdminPanel_GiveAssetToSelf"):FireServer() Log("[ADMIN] Give asset fired") end) end)
-	AddButton("Set Walk Speed 100", function() pcall(function() RE("AdminPanel_SetWalkSpeed"):FireServer(100) Log("[ADMIN] Speed -> 100") end) end)
-	AddButton("Set Speed Power 999", function() pcall(function() RE("AdminPanel_SetSpeedPower"):FireServer(999) Log("[ADMIN] Power -> 999") end) end)
+    AddSection("ADMIN PANEL")
+    AddButton("Check Admin Status", function() pcall(function() RE("AdminPanel_CheckAdminStatus"):FireServer() Log("[ADMIN] Check fired") end) end)
+    AddButton("Reset Self Data", function() pcall(function() RE("AdminPanel_ResetSelfData"):FireServer() Log("[ADMIN] Reset fired") end) end)
+    AddButton("Give Asset To Self", function() pcall(function() RE("AdminPanel_GiveAssetToSelf"):FireServer() Log("[ADMIN] Give asset fired") end) end)
+    AddButton("Set Walk Speed 100", function() pcall(function() RE("AdminPanel_SetWalkSpeed"):FireServer(100) Log("[ADMIN] Speed -> 100") end) end)
+    AddButton("Set Speed Power 999", function() pcall(function() RE("AdminPanel_SetSpeedPower"):FireServer(999) Log("[ADMIN] Power -> 999") end) end)
 
-	AddSection("CHARACTER")
-	AddButton("Reset Character", function() pcall(function() RE("ClientCharacter:RequestCharacterReset"):FireServer() Log("[CHAR] Reset") end) end)
+    AddSection("CHARACTER")
+    AddButton("Reset Character", function() pcall(function() RE("ClientCharacter:RequestCharacterReset"):FireServer() Log("[CHAR] Reset") end) end)
 
-	AddSection("SERVER LUCK")
-	AddButton("Get Server Luck", function() pcall(function() Log("[LUCK] " .. tostring(RF("ServerLuck:GetState"):InvokeServer())) end) end)
+    AddSection("SERVER LUCK")
+    AddButton("Get Server Luck", function() pcall(function() Log("[LUCK] " .. tostring(RF("ServerLuck:GetState"):InvokeServer())) end) end)
 
-	AddSection("ANALYTICS BYPASS")
-	AddToggle("Anti-AFK", function(on)
-		_G.AntiAfk = on
-		if on then spawn(function() while _G.AntiAfk do pcall(function() RE("Analytics:ReportAfkState"):FireServer(false) end) wait(60) end end) end
-	end)
+    AddSection("ANALYTICS BYPASS")
+    AddToggle("Anti-AFK", function(on)
+        _G.AntiAfk = on
+        if on then spawn(function() while _G.AntiAfk do pcall(function() RE("Analytics:ReportAfkState"):FireServer(false) end) wait(60) end end) end
+    end)
 
-	AddSection("MISC")
-	AddInput("Toggle Favorite (asset id)", function(val)
-		pcall(function() RE("AssetInventory:SetFavorite"):FireServer(tonumber(val) or 0) Log("[INV] Fav: " .. val) end)
-	end)
-	AddButton("Request Settings Update", function() pcall(function() RF("Settings:Request Update"):InvokeServer() Log("[SYS] Settings updated") end) end)
-	AddButton("Sync Guard Tutorial", function() pcall(function() RF("GuardTutorial:RequestSyncProgress"):InvokeServer() Log("[SYS] Tutorial synced") end) end)
-	AddButton("Request Asset Models", function() pcall(function() RF("RuntimeSync:RequestAssetModels"):InvokeServer() Log("[SYS] Models requested") end) end)
-" tostring(RF("Index:RequestClaim"):InvokeServer())) end) end)
+    AddSection("MISC")
+    AddInput("Toggle Favorite (asset id)", function(val)
+        pcall(function() RE("AssetInventory:SetFavorite"):FireServer(tonumber(val) or 0) Log("[INV] Fav: " .. val) end)
+    end)
+    AddButton("Request Settings Update", function() pcall(function() RF("Settings:Request Update"):InvokeServer() Log("[SYS] Settings updated") end) end)
+    AddButton("Sync Guard Tutorial", function() pcall(function() RF("GuardTutorial:RequestSyncProgress"):InvokeServer() Log("[SYS] Tutorial synced") end) end)
+    AddButton("Request Asset Models", function() pcall(function() RF("RuntimeSync:RequestAssetModels"):InvokeServer() Log("[SYS] Models requested") end) end)
+    AddButton("Claim Index Reward", function() pcall(function() Log("[INDEX] " .. tostring(RF("Index:RequestClaim"):InvokeServer())) end) end)
 
-	AddSection("PRODUCTS")
-	AddButton("Server Test Purchase", function() pcall(function() Log("[PROD] " .. tostring(RF("Products:Request Server Test"):InvokeServer())) end) end)
-	AddButton("Whitelist Purchase", function() pcall(function() Log("[PROD] " .. tostring(RF("Products:Whitelist Purchase"):InvokeServer())) end) end)
-	AddButton("Prompt Purchase", function() pcall(function() Log("[PROD] " .. tostring(RF("Products:Request Prompt Purchase"):InvokeServer())) end) end)
+    AddSection("PRODUCTS")
+    AddButton("Server Test Purchase", function() pcall(function() Log("[PROD] " .. tostring(RF("Products:Request Server Test"):InvokeServer())) end) end)
+    AddButton("Whitelist Purchase", function() pcall(function() Log("[PROD] " .. tostring(RF("Products:Whitelist Purchase"):InvokeServer())) end) end)
+    AddButton("Prompt Purchase", function() pcall(function() Log("[PROD] " .. tostring(RF("Products:Request Prompt Purchase"):InvokeServer())) end) end)
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // TAB SWITCHING
 -- ═══════════════════════════════════════════════════════════
 local tabBuilders = {
-	Main = BuildMainTab,
-	Treadmill = BuildTreadmillTab,
-	Assets = BuildAssetsTab,
-	Guards = BuildGuardsTab,
-	Trading = BuildTradingTab,
-	Misc = BuildMiscTab
+    Main = BuildMainTab,
+    Treadmill = BuildTreadmillTab,
+    Assets = BuildAssetsTab,
+    Guards = BuildGuardsTab,
+    Trading = BuildTradingTab,
+    Misc = BuildMiscTab
 }
 
 local function SwitchTab(name)
-	if not tabBuilders[name] then return end
-	for n, btn in pairs(tabButtons) do
-		btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
-		btn.TextColor3 = Color3.fromRGB(0, 200, 0)
-		btn.Text = "> " .. n
-		btn.Active = false
-	end
-	tabButtons[name].BackgroundColor3 = Color3.fromRGB(0, 60, 0)
-	tabButtons[name].TextColor3 = Color3.fromRGB(0, 255, 100)
-	tabButtons[name].Text = ">> " .. name
-	tabButtons[name].Active = true
-	tabBuilders[name]()
-	Log("[TAB] " .. name)
+    if not tabBuilders[name] then return end
+    for n, btn in pairs(tabButtons) do
+        btn.BackgroundColor3 = Color3.fromRGB(0, 20, 0)
+        btn.TextColor3 = Color3.fromRGB(0, 200, 0)
+        btn.Text = "> " .. n
+        btn.Active = false
+    end
+    tabButtons[name].BackgroundColor3 = Color3.fromRGB(0, 60, 0)
+    tabButtons[name].TextColor3 = Color3.fromRGB(0, 255, 100)
+    tabButtons[name].Text = ">> " .. name
+    tabButtons[name].Active = true
+    tabBuilders[name]()
+    Log("[TAB] " .. name)
 end
 
 for name, btn in pairs(tabButtons) do
-	btn.MouseButton1Click:Connect(function() SwitchTab(name) end)
+    btn.MouseButton1Click:Connect(function() SwitchTab(name) end)
 end
 
 -- ═══════════════════════════════════════════════════════════
 -- // KEYBIND TOGGLE
 -- ═══════════════════════════════════════════════════════════
 UIS.InputBegan:Connect(function(input, gpe)
-	if gpe then return end
-	if input.KeyCode == Enum.KeyCode.RightControl or input.KeyCode == Enum.KeyCode.RightShift then
-		Main.Visible = not Main.Visible
-	end
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.RightControl or input.KeyCode == Enum.KeyCode.RightShift then
+        Main.Visible = not Main.Visible
+    end
 end)
 
 -- ═══════════════════════════════════════════════════════════
